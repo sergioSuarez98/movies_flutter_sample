@@ -4,6 +4,7 @@ import 'package:uponor_technical_test/data/datasources/movie_remote_data_source.
 import 'package:uponor_technical_test/data/repository/movie_repository_impl.dart';
 import 'package:uponor_technical_test/domain/repositories/movie_repository.dart';
 import 'package:uponor_technical_test/domain/usecases/add_movie.dart';
+import 'package:uponor_technical_test/domain/usecases/delete_movie.dart';
 import 'package:uponor_technical_test/domain/usecases/get_movies.dart';
 import 'package:uponor_technical_test/domain/usecases/update_movie.dart';
 import 'package:uponor_technical_test/presentation/movies/cubit/movie_cubit.dart';
@@ -29,9 +30,10 @@ class ServiceLocator {
         () => AddMovie(getIt<MovieRepository>()));
     getIt.registerLazySingleton<UpdateMovie>(
         () => UpdateMovie(getIt<MovieRepository>()));
-
+    getIt.registerLazySingleton<DeleteMovie>(
+        () => DeleteMovie(getIt<MovieRepository>()));
     // DI Cubit
-    getIt.registerFactory<MovieCubit>(() => MovieCubit(
-        getIt<GetMovies>(), getIt<AddMovie>(), getIt<UpdateMovie>()));
+    getIt.registerFactory<MovieCubit>(() => MovieCubit(getIt<GetMovies>(),
+        getIt<AddMovie>(), getIt<UpdateMovie>(), getIt<DeleteMovie>()));
   }
 }

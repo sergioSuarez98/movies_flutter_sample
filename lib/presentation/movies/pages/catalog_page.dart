@@ -11,14 +11,30 @@ class CatalogView extends StatefulWidget {
 }
 
 class _CatalogViewState extends State<CatalogView> {
+  bool deleteAllowed = false;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<MovieCubit>()..fetchMovies(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Uponorflix'),
+          title: const Text('Uponorflix'),
           centerTitle: true,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    deleteAllowed = !deleteAllowed;
+                  });
+                },
+                child: const Icon(
+                  Icons.delete,
+                ),
+              ),
+            )
+          ],
         ),
         body: BlocConsumer<MovieCubit, MovieState>(
           listener: (context, state) {
@@ -26,6 +42,15 @@ class _CatalogViewState extends State<CatalogView> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message)),
               );
+            }
+            if (state is DeleteMovieSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Movie deleted successfully!'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+              context.read<MovieCubit>().fetchMovies();
             }
           },
           builder: (context, state) {
@@ -44,7 +69,15 @@ class _CatalogViewState extends State<CatalogView> {
                   itemCount: state.catalog.length,
                   itemBuilder: (context, index) {
                     final movie = state.catalog[index];
-                    return MovieCard(movie: movie);
+                    return MovieCard(
+                      movie: movie,
+                      deleteAllowed: deleteAllowed,
+                      deletedTap: () async {
+                        await context
+                            .read<MovieCubit>()
+                            .deleteExistingMovie(movie);
+                      },
+                    );
                   },
                 ),
               );

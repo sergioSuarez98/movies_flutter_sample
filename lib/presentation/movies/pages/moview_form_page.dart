@@ -71,8 +71,10 @@ class _MovieFormPageState extends State<_MovieFormPage> {
             listener: (context, state) async {
               if (state is AddMovieSuccess || state is UpdateMovieSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Movie added successfully!'),
+                  SnackBar(
+                    content: Text(state is AddMovieSuccess
+                        ? 'Movie added successfully!'
+                        : 'Movie updated successfully!'),
                     backgroundColor: Colors.green,
                   ),
                 );

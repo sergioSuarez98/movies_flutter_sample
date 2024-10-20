@@ -21,4 +21,9 @@ class MovieRepositoryImpl implements MovieRepository {
   Future<Movie> updateMovie(Movie updatedMovie) async {
     return await remoteDataSource.updateMovie(updatedMovie);
   }
+
+  @override
+  Future<void> deleteMovie(Movie deletedMovie) async {
+    await remoteDataSource.deleteMovie(deletedMovie);
+  }
 }

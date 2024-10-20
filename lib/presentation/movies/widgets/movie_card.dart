@@ -1,17 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:uponor_technical_test/domain/entities/movie.dart';
+import 'package:uponor_technical_test/helpers/service_locator.dart';
+import 'package:uponor_technical_test/presentation/movies/cubit/movie_cubit.dart';
 import 'package:uponor_technical_test/presentation/movies/pages/moview_form_page.dart';
 
-class MovieCard extends StatelessWidget {
+class MovieCard extends StatefulWidget {
   final Movie movie;
+  bool deleteAllowed;
+  final Function() deletedTap;
 
-  const MovieCard({Key? key, required this.movie}) : super(key: key);
+  MovieCard(
+      {Key? key,
+      required this.movie,
+      required this.deleteAllowed,
+      required this.deletedTap})
+      : super(key: key);
 
+  @override
+  State<MovieCard> createState() => _MovieCardState();
+}
+
+class _MovieCardState extends State<MovieCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MovieFormPage.route(movie));
+        !widget.deleteAllowed
+            ? Navigator.push(context, MovieFormPage.route(widget.movie))
+            : () {};
       },
       child: Card(
         elevation: 4,
@@ -21,14 +37,28 @@ class MovieCard extends StatelessWidget {
         child: Stack(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(10)),
               child: Image.network(
-                movie.posterUrl,
+                widget.movie.posterUrl,
                 fit: BoxFit.cover,
                 height: double.infinity,
                 width: double.infinity,
               ),
             ),
+            widget.deleteAllowed
+                ? Positioned(
+                    right: 5,
+                    top: 5,
+                    child: GestureDetector(
+                      onTap: widget.deletedTap,
+                      child: const Icon(
+                        Icons.cancel_outlined,
+                        color: Colors.red,
+                      ),
+                    ),
+                  )
+                : const SizedBox(),
             Positioned(
               bottom: 0,
               right: 0,
@@ -43,7 +73,7 @@ class MovieCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      movie.title,
+                      widget.movie.title,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -54,7 +84,7 @@ class MovieCard extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Rating: ${movie.rating}',
+                      'Rating: ${widget.movie.rating}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -62,7 +92,7 @@ class MovieCard extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      '${movie.releaseYear}',
+                      '${widget.movie.releaseYear}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,

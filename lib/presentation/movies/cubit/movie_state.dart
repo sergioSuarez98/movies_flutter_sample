@@ -34,6 +34,11 @@ class UpdateMovieSuccess extends MovieState {
   List<Object?> get props => [];
 }
 
+class DeleteMovieSuccess extends MovieState {
+  @override
+  List<Object?> get props => [];
+}
+
 class MovieError extends MovieState {
   final String message;
   const MovieError(this.message);

@@ -12,6 +12,7 @@ abstract class MovieRemoteDataSource {
   Future<List<MovieModel>> getMovies();
   Future<void> addMovie(Movie newMovie);
   Future<Movie> updateMovie(Movie updatedMovie);
+  Future<void> deleteMovie(Movie deletedMovie);
 }
 
 class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
@@ -59,7 +60,20 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
       final movie = MovieModel.fromJson(movieJson);
       return movie;
     } else {
-      throw Exception('Error al agregar película');
+      throw Exception('Error al editar película');
+    }
+  }
+
+  @override
+  Future<void> deleteMovie(Movie deletedMovie) async {
+    final response = await dio.delete(
+      'https://example.com/movies/${deletedMovie.id}',
+      data: deletedMovie.toJson(),
+    );
+    if (response.statusCode == 204) {
+      print('película borrada');
+    } else {
+      throw Exception('Error al borrar película');
     }
   }
 }
