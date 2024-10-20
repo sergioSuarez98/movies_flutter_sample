@@ -24,6 +24,16 @@ class MovieSuccess extends MovieState {
   List<Object?> get props => [];
 }
 
+class AddMovieSuccess extends MovieState {
+  @override
+  List<Object?> get props => [];
+}
+
+class UpdateMovieSuccess extends MovieState {
+  @override
+  List<Object?> get props => [];
+}
+
 class MovieError extends MovieState {
   final String message;
   const MovieError(this.message);

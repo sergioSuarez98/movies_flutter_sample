@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uponor_technical_test/helpers/service_locator.dart';
-import 'package:uponor_technical_test/presentation/cubit/movie_cubit.dart';
-import 'package:uponor_technical_test/presentation/pages/widgets/movie_card.dart';
+import 'package:uponor_technical_test/presentation/movies/cubit/movie_cubit.dart';
+import 'package:uponor_technical_test/presentation/movies/pages/moview_form_page.dart';
+import 'package:uponor_technical_test/presentation/movies/widgets/movie_card.dart';
 
-class CatalogView extends StatelessWidget {
+class CatalogView extends StatefulWidget {
+  @override
+  State<CatalogView> createState() => _CatalogViewState();
+}
+
+class _CatalogViewState extends State<CatalogView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Uponorflix'),
-        centerTitle: true,
-      ),
-      body: BlocProvider(
-        create: (context) => getIt<MovieCubit>()..fetchMovies(),
-        child: BlocConsumer<MovieCubit, MovieState>(
+    return BlocProvider(
+      create: (context) => getIt<MovieCubit>()..fetchMovies(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Uponorflix'),
+          centerTitle: true,
+        ),
+        body: BlocConsumer<MovieCubit, MovieState>(
           listener: (context, state) {
             if (state is MovieError) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -43,9 +49,17 @@ class CatalogView extends StatelessWidget {
                 ),
               );
             }
-
             return const SizedBox.shrink();
           },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            Navigator.push(
+              context,
+              MovieFormPage.route(null),
+            );
+          },
+          child: const Icon(Icons.add),
         ),
       ),
     );

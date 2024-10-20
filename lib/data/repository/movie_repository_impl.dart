@@ -11,4 +11,14 @@ class MovieRepositoryImpl implements MovieRepository {
   Future<List<Movie>> fetchMovies() async {
     return await remoteDataSource.getMovies();
   }
+
+  @override
+  Future<void> addMovie(Movie newMovie) async {
+    await remoteDataSource.addMovie(newMovie);
+  }
+
+  @override
+  Future<Movie> updateMovie(Movie updatedMovie) async {
+    return await remoteDataSource.updateMovie(updatedMovie);
+  }
 }

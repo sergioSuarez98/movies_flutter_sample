@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uponor_technical_test/domain/entities/movie.dart';
+import 'package:uponor_technical_test/presentation/movies/pages/moview_form_page.dart';
 
 class MovieCard extends StatelessWidget {
   final Movie movie;
@@ -10,8 +11,7 @@ class MovieCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        //navigation to detail page
-        print(movie.title);
+        Navigator.push(context, MovieFormPage.route(movie));
       },
       child: Card(
         elevation: 4,
