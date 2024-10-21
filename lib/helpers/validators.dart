@@ -1,6 +1,6 @@
 class Validators {
-  static final emptyField = 'Required field';
-
+  static const emptyField = 'Required field';
+  //validators para el formulario.
   static String? titleValidator(String? title) {
     final RegExp titlePattern = RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$');
     if (title == null || title.isEmpty) return emptyField;

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'dart:convert';
 
 class MockInterceptor extends Interceptor {
+  //esto  simula al json con el listado de películas que se recibiría de backend
   List<Map<String, dynamic>> movies = [
     {
       "id": "1",
@@ -56,6 +57,7 @@ class MockInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     if (options.path == 'https://example.com/movies') {
+      //aquí se puede ver que las respuestas las doy en función de que tipo de petición sea.
       if (options.method == 'GET') {
         final response = Response(
           requestOptions: options,
@@ -64,9 +66,9 @@ class MockInterceptor extends Interceptor {
         );
         handler.resolve(response);
       } else if (options.method == 'POST') {
-        print(options.data);
         final jsonString = jsonEncode(options.data);
         final newMovie = jsonDecode(jsonString);
+        //para que el id siempre siga en aumento
         newMovie['id'] = (movies.length + 1).toString();
         movies.add(newMovie);
 
@@ -78,11 +80,13 @@ class MockInterceptor extends Interceptor {
         handler.resolve(response);
       }
     } else if (options.path.startsWith('https://example.com/movies/')) {
+      //para simular como se haría en un put y delete normales, pasando el id por la url en este caso.
       final movieId = options.path.split('/').last;
 
       if (options.method == 'PUT') {
         final jsonString = jsonEncode(options.data);
         final updatedMovie = jsonDecode(jsonString);
+        //busca por id para modificar ese objeto
         final index = movies.indexWhere((movie) => movie['id'] == movieId);
 
         if (index != -1) {
@@ -100,6 +104,7 @@ class MockInterceptor extends Interceptor {
           ));
         }
       } else if (options.method == 'DELETE') {
+        //también busca por id para borrar
         final index = movies.indexWhere((movie) => movie['id'] == movieId);
 
         if (index != -1) {

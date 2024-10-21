@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uponor_technical_test/domain/entities/movie.dart';
-import 'package:uponor_technical_test/domain/usecases/add_movie.dart';
-import 'package:uponor_technical_test/domain/usecases/get_movies.dart';
 import 'package:uponor_technical_test/helpers/service_locator.dart';
 import 'package:uponor_technical_test/helpers/validators.dart';
 import 'package:uponor_technical_test/presentation/movies/cubit/movie_cubit.dart';
@@ -10,6 +8,9 @@ import 'package:uponor_technical_test/presentation/movies/pages/catalog_page.dar
 import 'package:uponor_technical_test/presentation/movies/widgets/form_text_form_field.dart';
 
 class MovieFormPage extends StatelessWidget {
+  ///se le pone opcional esta variable para poder reutulizar el formulario.
+  ///Si viene con contenido movie, entenderá que es para editar la película,
+  ///y por otro lado si viene vacío entiende que es para crear una nueva.
   final Movie? movie;
 
   const MovieFormPage({Key? key, this.movie}) : super(key: key);
@@ -48,6 +49,8 @@ class _MovieFormPageState extends State<_MovieFormPage> {
   void initState() {
     super.initState();
     if (widget.movie != null) {
+      ///todo esto es para que cuando estemos editando una película,
+      ///se autocompleten los campos con lo que ya tiene.
       title = widget.movie!.title;
       releaseYear = widget.movie!.releaseYear.toString();
       rating = widget.movie!.rating.toString();
@@ -60,9 +63,11 @@ class _MovieFormPageState extends State<_MovieFormPage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      //para cerrar el teclado pulsando fuera de él.
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
+          //lógica para cambiar el título en función de si es añadir o editar.
           title: Text(widget.movie == null ? 'Add Movie' : widget.movie!.title),
         ),
         body: Padding(
@@ -137,6 +142,7 @@ class _MovieFormPageState extends State<_MovieFormPage> {
     );
   }
 
+  //función que valida el formulario e inicia la petición
   void _saveForm() {
     if (_formKey.currentState!.validate()) {
       final movieCubit = context.read<MovieCubit>();

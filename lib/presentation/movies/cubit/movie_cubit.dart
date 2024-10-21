@@ -20,6 +20,9 @@ class MovieCubit extends Cubit<MovieState> {
 
   Future<void> fetchMovies() async {
     emit(MovieLoading());
+
+    ///le añado el delay dado que no hay servidor, para que
+    ///simule un poco el tema del tiempo de respuesta y se vea el estado de loading.
     await Future.delayed(const Duration(milliseconds: 200));
     try {
       final movies = await getMovies();
@@ -73,12 +76,11 @@ class MovieCubit extends Cubit<MovieState> {
   Future<void> deleteExistingMovie(Movie deletedMovie) async {
     emit(MovieLoading());
     try {
-      await deleteMovie(
-          deletedMovie); // Llama a la lógica para eliminar la película
-      emit(DeleteMovieSuccess()); // Este estado debe emitirse
-      await fetchMovies(); // Asegúrate de que fetchMovies() esté actualizando el estado
+      await deleteMovie(deletedMovie);
+      emit(DeleteMovieSuccess());
+      await fetchMovies(); //para actualizar el listado una vez borrada la película.
     } catch (error) {
-      emit(MovieError('Failed to delete movie'));
+      emit(const MovieError('Failed to delete movie'));
     }
   }
 }

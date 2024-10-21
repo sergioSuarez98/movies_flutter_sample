@@ -19,6 +19,9 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
   final Dio dio;
 
   MovieRemoteDataSourceImpl(this.dio) {
+    ///tengo hecho un interceptor mockeado para simular algo las peticiones.
+    ///No funciona exactamente igual a como sería realmente, pero es similar
+    ///y así se ve una implementación completa con dio.
     dio.interceptors.add(MockInterceptor());
   }
   var movieList = <MovieModel>[];
@@ -42,7 +45,9 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
       data: newMovie.toJson(),
     );
     if (response.statusCode == 201) {
-      print('success');
+      movieList = (jsonDecode(response.data) as List)
+          .map((movieJson) => MovieModel.fromJson(movieJson))
+          .toList();
     } else {
       throw Exception('Error al agregar película');
     }
@@ -55,7 +60,6 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
       data: updatedMovie.toJson(),
     );
     if (response.statusCode == 200) {
-      print(response.data);
       final movieJson = jsonDecode(response.data);
       final movie = MovieModel.fromJson(movieJson);
       return movie;
@@ -71,7 +75,7 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
       data: deletedMovie.toJson(),
     );
     if (response.statusCode == 204) {
-      print('película borrada');
+      print('Movie deleted successfully');
     } else {
       throw Exception('Error al borrar película');
     }

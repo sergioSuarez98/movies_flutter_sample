@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:uponor_technical_test/domain/entities/movie.dart';
-import 'package:uponor_technical_test/helpers/service_locator.dart';
-import 'package:uponor_technical_test/presentation/movies/cubit/movie_cubit.dart';
 import 'package:uponor_technical_test/presentation/movies/pages/moview_form_page.dart';
 
 class MovieCard extends StatefulWidget {
@@ -25,6 +23,8 @@ class _MovieCardState extends State<MovieCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        ///para que cuando estemos borrando películas, no podamos
+        ///pulsar en el cartel y que te navege a la pantalla de editar.
         !widget.deleteAllowed
             ? Navigator.push(context, MovieFormPage.route(widget.movie))
             : () {};
@@ -44,6 +44,15 @@ class _MovieCardState extends State<MovieCard> {
                 fit: BoxFit.cover,
                 height: double.infinity,
                 width: double.infinity,
+
+                ///esto está puesto por que si se compila en web hay
+                ///un conflicto al cargar las network images que vienen
+                ///de una url. Así por lo menos aparece una carátula y la usabilidad se
+                ///puede comprobar
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return Image.asset('assets/images/default_poster.png');
+                },
               ),
             ),
             widget.deleteAllowed

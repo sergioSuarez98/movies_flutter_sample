@@ -11,6 +11,7 @@ import 'package:uponor_technical_test/presentation/movies/cubit/movie_cubit.dart
 
 final getIt = GetIt.instance;
 
+//clase de inyección de dependencias, para no tener que escribir todo en el main.
 class ServiceLocator {
   static void setupDependencies() {
     getIt.registerLazySingleton<Dio>(() => Dio());
